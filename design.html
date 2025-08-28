@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>designed page</title>
+    <link rel="stylesheet" href="fontPack.css">
+    <style>
+        :root {
+            --background: #FFFFFF;
+            --base: #F2BC94;
+            --accent: #722620;
+            --selected: #DE8A0D;
+            --color: #000000;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0px;
+        }
+
+        .page {
+            width: 100vw;
+            height: 100vh;
+
+            display: grid;
+            grid-template-rows: 20vh 65vh 15vh;
+
+            & > div {
+                display: grid;
+                place-content: center;
+                /* justify-items: center; */
+            }
+
+            & > .header {
+                --shift: 58%;
+                background: linear-gradient(45deg, var(--background) 0 var(--shift), var(--base) var(--shift) 100%);
+                font-size: clamp(5vw, 5vh, 8vh);
+                font-weight: bold;
+                font-family: serif;
+                font-style: italic;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1.5vh;
+                position: relative;
+
+                &::after {
+                    --s: calc(var(--shift) + 10vh);
+                    --xx: calc(50% + var(--s)/2);
+                    content: " ";
+                    width: 100%;
+                    height: calc(100vw - var(--s));
+                    position: absolute;
+                    top: 100%;
+                    background: linear-gradient(45deg, var(--background) 0 var(--xx), var(--base) var(--xx) 100%);
+                    user-select: none;
+                    pointer-events: none;
+                    /* background: red; */
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="header"><span style="color: var(--accent);">⚔Member's</span> <span style="color: white;">Card⚔</span></div>
+        <div class="main"></div>
+        <div class="footer"></div>
+    </div>
+</body>
+</html>
