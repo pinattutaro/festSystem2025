@@ -32,7 +32,6 @@
                 display: grid;
                 place-content: center;
                 /* justify-items: center; */
-                padding: 0px 2.5vw;
             }
 
             & > .header {
@@ -55,7 +54,7 @@
                     --margin: 2vw;
                     --height: 0.5vh;
                     content: " ";
-                    width: calc(var(--s) - var(--margin)*2);
+                    width: calc(var(--s) - 2*var(--margin));
                     height: var(--height);
                     position: absolute;
                     top: calc(20vh - var(--height)/2);
@@ -73,11 +72,17 @@
                     height: calc(100vw - var(--s));
                     position: absolute;
                     top: 100%;
+                    left: 0px;
                     background: linear-gradient(45deg, var(--background) 0 var(--xx), var(--base) var(--xx) 100%);
                     user-select: none;
                     pointer-events: none;
                     z-index: -1;
                     /* background: red; */
+                }
+
+                & > span:nth-child(2)::first-letter {
+                    /* -webkit-text-stroke: 1px var(--border); */
+                    font-weight: bolder;
                 }
             }
         }
