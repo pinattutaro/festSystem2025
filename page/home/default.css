@@ -139,7 +139,7 @@
                 box-sizing: border-box;
                 padding-left: calc(1.2*(0.5*var(--height) + var(--thick)));
                 display: grid;
-                place-content: center;
+                align-content: center;
                 text-align: left;
             }
         }
