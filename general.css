@@ -1,0 +1,23 @@
+:root {
+    --background: #FFFFFF;
+    --base: #F2BC94;
+    --accent: #722620;
+    --selected: #DE8A0D;
+    --color: #000000;
+    --border: #ccc;
+
+    --header-height: 15dvh;
+    --footer-height: clamp(10dvh, 15dvh, 25dvw);
+
+    --root-font-size: clamp(5dvw, 5dvh, 8dvh);
+}
+
+html, body {
+    width: 100dvw;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    background-color: var(--background);
+}

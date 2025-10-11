@@ -1,0 +1,147 @@
+@import url("../../general.css");
+
+@media (min-aspect-ratio: 1) {
+    .level > div {
+        grid-template-columns: 2fr 3fr;
+
+        & > *{
+            grid-area: unset !important;
+        }
+    }
+}
+
+.main {
+    width: stretch;
+    height: stretch;
+    padding: min(2.5dvw, 2.5dvh);
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+
+    & > .level {
+        display: grid;
+        place-items: center;
+        container-type: size;
+
+        & > div {
+            display: inline-grid;
+            place-items: center;
+            grid-template-areas: "a";
+
+            & > * {
+                --thick: 10cqmin;
+                --thick-guide: 2cqmin;
+                --angle: 70%;
+
+                width: 100cqmin;
+                aspect-ratio: 1;
+                /* border: 0.5dvw solid var(--border); */
+                box-sizing: border-box;
+                grid-area: a;
+            }
+
+            & > .ring {
+                border-radius: 50%;
+                /* border-width: var(--thick); */
+                background: conic-gradient(from 0deg at 50% 50%, var(--selected) 0% var(--angle), transparent var(--angle) 100%);
+                --hole: radial-gradient(closest-side, transparent calc(100% - var(--thick)), black calc(100% - var(--thick)) 100%);
+                -webkit-mask: var(--hole);
+                mask: var(--hole);
+                position: relative;
+
+                &::before {
+                    content: "";
+                    width: 100%;
+                    aspect-ratio: 1;
+                    position: absolute;
+                    inset: 0;
+                    border-radius: 50%;
+                    border: solid var(--thick-guide) var(--border);
+                    box-sizing: border-box;
+                }
+            }
+
+            & > .display {
+                padding: calc(var(--thick)*1.2);
+                display: grid;
+                place-content: center;
+                font-size: 10cqmin;
+                word-break: break-all;
+                white-space: normal;
+                word-wrap: break-word;
+                text-align: center;
+                z-index: 1;
+            }
+        }
+    }
+
+    & > .progress {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: flex-start;
+        container-type: size;
+        margin: 0 10dvw;
+        z-index: 0;
+
+        & > .subRing {
+            --height: 20cqh;
+            --thick: calc(var(--height) / 10);
+            --angle: 30%;
+
+            display: block;
+            height: var(--height);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background-size: 80%;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: var(--background);
+            position: relative;
+
+            &:nth-child(even) {
+                align-self: flex-end;
+
+                & > div {
+                    right: calc(0.5*var(--height));
+                    left: unset;
+                    padding-left: 0;
+                    padding-right: calc(1.2*(0.5*var(--height) + var(--thick)));
+                    text-align: right;
+                }
+            }
+
+            &::before {
+                content: "";
+                height: calc(var(--height) + var(--thick)*2);
+                aspect-ratio: 1;
+                inset: calc(-1*var(--thick));
+                border-radius: 50%;
+                border: solid calc(0.2*var(--thick)) var(--border);
+                box-sizing: border-box;
+                position: absolute;
+                background: conic-gradient(from 0deg at center, var(--base) 0 var(--angle), var(--background) var(--angle) 100%);
+                z-index: -1;
+            }
+            
+            & > div {
+                display: inline;
+                min-width: calc(100cqw - 1.5*var(--height) - var(--thick));
+                height: var(--height);
+                position: absolute;
+                left: calc(0.5*var(--height));
+                /* top: calc(-1*var(--thick)); */
+                top: 0;
+                border: solid 1px var(--border);
+                border-width: 1px 0;
+                /* border-width: 1px 0; */
+                z-index: -2;
+                box-sizing: border-box;
+                padding-left: calc(1.2*(0.5*var(--height) + var(--thick)));
+                display: grid;
+                place-content: center;
+                text-align: left;
+            }
+        }
+    }
+}
