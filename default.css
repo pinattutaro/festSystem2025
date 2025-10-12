@@ -68,15 +68,15 @@
 
     & > .footer {
         /* background-color: var(--base); */
-        --padding: 2%;
+        /* --padding: 5; */
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        align-items: center;
+        place-items: center;
         overflow-y: visible;
         overflow-x: visible;
         background-color: var(--accent);
         border-radius: calc(var(--footer-height)/4);
-        padding: var(--padding) 0;
+        /* padding: var(--padding) 0; */
         /* z-index: -2; */
         isolation: isolate;
         position: relative;
@@ -102,7 +102,7 @@
             
             & > .img {
                 display: block;
-                height: calc(100% - 2*var(--padding));
+                height: calc(var(--footer-height)*0.8);
                 aspect-ratio: 1;
                 border-radius: 50%;
                 background-color: var(--base);
