@@ -11,8 +11,8 @@
 }
 
 .main {
-    width: stretch;
-    height: stretch;
+    width: 100dvw;
+    height: 100dvh;
     padding: min(2.5dvw, 2.5dvh);
     box-sizing: border-box;
     display: grid;
@@ -125,12 +125,14 @@
             }
             
             & > div {
-                display: inline;
-                min-width: calc(100cqw - 1.5*var(--height) - var(--thick));
+                display: inline-block;
+                min-width: 50cqw;
+                width: calc(100cqw - 1.5*var(--height) - var(--thick));
                 height: var(--height);
+                overflow: hidden;
+                text-overflow: ellipsis;
                 position: absolute;
                 left: calc(0.5*var(--height));
-                /* top: calc(-1*var(--thick)); */
                 top: 0;
                 border: solid 1px var(--border);
                 border-width: 1px 0;
@@ -141,6 +143,8 @@
                 display: grid;
                 align-content: center;
                 text-align: left;
+                font-size: 5cqh;
+                line-height: 1;
             }
         }
     }

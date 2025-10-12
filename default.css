@@ -63,7 +63,7 @@
     & > .main {
         display: block;
         width: 100%;
-        height: stretch;
+        height: calc(100dvh - var(--header-height) - var(--footer-height));
     }
 
     & > .footer {
