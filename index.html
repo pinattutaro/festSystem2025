@@ -12,22 +12,35 @@
         <div class="header"><span>header</span></div>
         <iframe src="./page/home/home.html" frameborder="0" class="main"></iframe>
         <div class="footer">
-            <div>
+            <div class="icon selected">
                 <div class="img" style="background-image: url('./img/home.svg')"></div>
             </div>
-            <div>
+            <div class="icon">
                 <div class="img" style="background-image: url('./img/list.svg')"></div>
             </div>
-            <div>
+            <div class="icon">
                 <div class="img" style="background-image: url('./img/leaderboard.svg')"></div>
             </div>
-            <div>
+            <div class="icon">
                 <div class="img" style="background-image: url('./img/person.svg')"></div>
             </div>
+            <div class="pointer"></div>
         </div>
     </div>
 </body>
 <script>
-    
+    const icons = document.querySelectorAll('.icon');
+    const iframe = document.getElementsByClassName('main')[0];
+    const pages = ["home", "quest", "rank", "setting"];
+    const pointer = document.getElementsByClassName('pointer')[0];
+
+    for (let i = 0; i < icons.length; i++) {
+        icons[i].addEventListener('click', () => {
+            iframe.setAttribute("src", `./page/${pages[i]}/${pages[i]}.html`);
+            icons.forEach(e => e.classList.remove("selected"));
+            icons[i].classList.add('selected');
+            pointer.style.setProperty("--left", i);
+        });
+    }
 </script>
 </html>
