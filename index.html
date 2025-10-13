@@ -36,10 +36,11 @@
 
     for (let i = 0; i < icons.length; i++) {
         icons[i].addEventListener('click', () => {
+            console.log(i);
             iframe.setAttribute("src", `./page/${pages[i]}/${pages[i]}.html`);
             icons.forEach(e => e.classList.remove("selected"));
             icons[i].classList.add('selected');
-            pointer.style.setProperty("--left", i);
+            pointer.style.left = `${i*25}dvw`;
         });
     }
 </script>

@@ -111,7 +111,7 @@
                 top: 0px;
                 background-size: 100%;
                 background-repeat: no-repeat;
-                transition: top 0.3s ease;
+                transition: top 0.2s linear;
 
                 /* &:active, &:hover {
                     top: calc(-0.5*var(--footer-height));
@@ -153,18 +153,18 @@
         }
 
         & > .pointer {
-            --left: 0;
+            /* --left: 0; */
             --size: min(var(--footer-height),25dvw);
 
             width: 25dvw;
             height: var(--footer-height);
             position: absolute;
-            top: calc(-0.5*var(--size));
-            left: calc(var(--left)*25dvw);
+            top: calc(-0.51*var(--size));
+            left: 0;
             display: grid;
             place-items: center;
             place-content: center;
-            transition: left 0.1s ease;
+            transition: left 0.1s linear;
             z-index: -1;
 
             &::after {
