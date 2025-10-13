@@ -9,7 +9,6 @@
     font-style: italic;
 
     & > div {
-        /* border: solid 1px black; */
         box-sizing: border-box;
         position: relative;
     }
@@ -20,30 +19,14 @@
         font-size: var(--root-font-size);
         line-height: var(--header-height);
         padding-left: var(--root-font-size);
-        z-index: 0;
         border-bottom: groove 1dvh var(--border);
         border-radius: 1dvh;
-        /* overflow: hidden; */
 
         & > span {
             z-index: 2;
             display: inline-block;
             position: relative;
         }
-
-        /* &::before {
-            content: "";
-            display: block;
-            height: 150%;
-            width: 20%;
-            background-color: var(--base);
-            position: absolute;
-            right: var(--root-font-size);
-            top: 25%;
-            z-index: 1;
-
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 90%, 0 100%, 0 0);
-        } */
 
         &::after {
             content: "";
@@ -56,7 +39,6 @@
             top: 0px;
             transform-origin: 50% 100%;
             transform: rotate(45deg);
-            z-index: -1;
         }
     }
 
@@ -67,8 +49,6 @@
     }
 
     & > .footer {
-        /* background-color: var(--base); */
-        /* --padding: 5; */
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         place-items: center;
@@ -76,8 +56,6 @@
         overflow-x: visible;
         background-color: var(--accent);
         border-radius: calc(var(--footer-height)/4);
-        /* padding: var(--padding) 0; */
-        /* z-index: -2; */
         isolation: isolate;
         position: relative;
 
@@ -85,16 +63,6 @@
             height: 100%;
             display: grid;
             place-items: center;
-
-            /* &:hover {
-                & > .img {
-                    top: calc(-0.5*var(--footer-height));
-
-                    &::before {
-                        opacity: 1;
-                    }
-                }
-            } */
 
             &.selected > .img {
                 top: calc(-0.5*var(--footer-height));
@@ -106,37 +74,11 @@
                 aspect-ratio: 1;
                 border-radius: 50%;
                 background-color: var(--base);
-                /* background: linear-gradient(45deg, var(--base) 0%, white 80%, var(--base) 100%); */
                 position: relative;
                 top: 0px;
                 background-size: 100%;
                 background-repeat: no-repeat;
                 transition: top 0.2s linear;
-
-                /* &:active, &:hover {
-                    top: calc(-0.5*var(--footer-height));
-
-                    &::before {
-                        opacity: 1;
-                    }
-                } */
-
-                &::before {
-                    --size: min(var(--footer-height),25dvw);
-                    /* content: ""; */
-                    display: block;
-                    position: absolute;
-                    inset: calc((100% - var(--size)) / 2);
-                    /* height: min(var(--footer-height),calc(25dvw)); */
-                    height: var(--size);
-                    aspect-ratio: 1;
-                    border-radius: 50%;
-                    background-color: var(--background);
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
-                    z-index: -1;
-                    /* clip-path: polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%); */
-                }
 
                 &::after {
                     content: "";
@@ -153,7 +95,6 @@
         }
 
         & > .pointer {
-            /* --left: 0; */
             --size: min(var(--footer-height),25dvw);
 
             width: 25dvw;
