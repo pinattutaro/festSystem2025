@@ -1,3 +1,18 @@
+/* @media (prefers-color-scheme: dark) {
+    :root {
+        --background: #333 !important;
+        --base: #f3d9c5 !important;
+        --accent: #94312a !important;
+        --selected: #e79d2e !important;
+        --color: white !important;
+        --border: #eee !important;
+    }
+
+    * {
+        text-shadow: 0 0 min(1vh, 1vw) var(--color);
+    }
+} */
+
 :root {
     --background: #FFFFFF;
     --base: #F2BC94;

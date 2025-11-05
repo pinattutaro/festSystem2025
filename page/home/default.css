@@ -1,5 +1,3 @@
-@import url("../../general.css");
-
 @media (min-aspect-ratio: 1) {
     .level > div {
         grid-template-columns: 2fr 3fr;
@@ -8,6 +6,12 @@
             grid-area: unset !important;
         }
     }
+}
+
+@property --angle {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: true;
 }
 
 .main {
@@ -31,7 +35,6 @@
             & > * {
                 --thick: 10cqmin;
                 --thick-guide: 2cqmin;
-                --angle: 70%;
 
                 width: 100cqmin;
                 aspect-ratio: 1;
@@ -41,6 +44,7 @@
             }
 
             & > .ring {
+                --angle: 70%;
                 border-radius: 50%;
                 /* border-width: var(--thick); */
                 background: conic-gradient(from 0deg at 50% 50%, var(--selected) 0% var(--angle), transparent var(--angle) 100%);
@@ -136,7 +140,6 @@
                 top: 0;
                 border: solid 1px var(--border);
                 border-width: 1px 0;
-                /* border-width: 1px 0; */
                 z-index: -2;
                 box-sizing: border-box;
                 padding-left: calc(1.2*(0.5*var(--height) + var(--thick)));

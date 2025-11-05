@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./default.css">
+    <link rel="stylesheet" href="../../general.css">
 </head>
 <body>
     <div class="main">
@@ -30,4 +31,18 @@
         </div>
     </div>
 </body>
+<script>
+    const rings = document.querySelectorAll('.level .ring, .subRing');
+    rings.forEach(e => {
+        const percentage = e.style.getPropertyValue('--angle');
+        e.animate([
+            { "--angle": "0%" },
+            { "--angle": percentage }
+        ], {
+            duration: 3000,
+            easing: "cubic-bezier(0.24, 0.7, 0.49, 0.98)",
+            fill: "forwards"
+        });  
+    });
+</script>
 </html>

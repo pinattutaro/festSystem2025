@@ -1,0 +1,105 @@
+.main {
+    width: 100dvw;
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: 50dvh auto;
+    /* gap: 1dvh; */
+    overflow-x: hidden;
+    overflow-y: scroll;
+    /* overflow: hidden; */
+
+    & > * {
+        margin: 1dvh 0;
+    }
+
+    & > .podium {
+        /* margin-top: 1dvh; */
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: flex-end;
+        position: relative;
+        container-type: size;
+
+        & > .banner {
+            --bottom: 5dvh;
+            --info-height: calc((100cqh - var(--bottom))/2);
+
+            width: 30%;
+            padding-bottom: var(--bottom);
+            box-sizing: border-box;
+            background-color: var(--base);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--bottom)), 50% 100%, 0% calc(100% - var(--bottom)));
+            display: grid;
+            grid-template-rows: auto var(--info-height);
+            /* grid-template-rows: auto auto; */
+            grid-template-columns: 1;
+
+            &:nth-child(1) {
+                height: 100%;
+                order: 2;
+            }
+
+            &:nth-child(2) {
+                height: 90%;
+                order: 1;
+            }
+
+            &:nth-child(3) {
+                height: 80%;
+                order: 3;
+            }
+
+            & > .uIcon {
+                width: 100%;
+                display: grid;
+                place-items: center;
+                container-type: size;
+
+                & > div {
+                    width: 90cqmin;
+                    aspect-ratio: 1;
+                    border-radius: 50%;
+                    border: solid 1px #000;
+                    box-sizing: border-box;
+                    background-size: 100%;
+                    background-position: center;
+                    background-repeat: repeat;
+                    background-color: transparent;
+                }
+            }
+
+            & > .uInfo {
+                --line: 4;
+                --line-height: 2;
+                --padding: 0.05;
+
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                text-align: center;
+                padding: calc(var(--info-height) * var(--padding)) 0;
+                font-size: calc(var(--info-height)*(1 - var(--padding)) / (var(--line) * var(--line-height)));
+                line-height: var(--line-height);
+            }
+        }
+    }
+
+    & > .board {
+        min-height: 50dvh;
+        margin: 0 10dvw;
+        padding: 0;
+
+        & > .rank {
+            --right: 90%;
+
+            height: 10dvh;
+            /* border: solid 1px #000; */
+            background: var(--base);
+            margin: 2dvh 0;
+            border-radius: 5dvh 0 0 5dvh;
+            clip-path: polygon(0 0, var(--right) 0, 100% 50%, var(--right) 100%, 0 100%);
+            position: relative;
+        }
+    }
+}

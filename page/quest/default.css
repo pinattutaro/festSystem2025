@@ -1,0 +1,30 @@
+.main {
+    width: 100dvw;
+    height: 100dvh;
+
+    & > .board {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-rows: 3;
+        grid-template-columns: 2;
+        grid-template-areas: "a b" "c d" "e f";
+
+        & > .flyer {
+            border: solid 1px #000;
+            box-sizing: border-box;
+
+            &:nth-child(1) {
+                grid-area: a;
+            }
+
+            &:nth-child(2) {
+                grid-area: d;
+            }
+
+            &:nth-child(3) {
+                grid-area: e
+            }
+        }
+    }
+}
