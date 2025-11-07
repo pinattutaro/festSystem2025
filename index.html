@@ -132,8 +132,9 @@
 			Member's Card
 			<div class="uinfo">
 				<div class="ui id">No. 123456</div>
-				<div class="ui name">Name<span>user0000</span></div>
+				<!-- <div class="ui name">Name<span>user0000</span></div> -->
 				<div class="ui level">Level<span>50</span></div>
+				<div class="ui cash">Cash<span>100</span></div>
 			</div>
 		</div>
 		<div id="qrcode" class="qrcode"></div>
@@ -151,6 +152,10 @@
 		colorLight: "#161616",
 		correctLevel: QRCode.CorrectLevel.H
 	});
+
+	const idElem = document.querySelector(".uinfo .id");
+	const levelElem = document.querySelector(".uinfo .level span");
+	const cashElem = document.querySelector(".uinfo .cash span");
 
 	const main = async () => {
 		const envjson = await fetch("https://pinattutaro.github.io/fest2025api/4u/env.json").then(res => res.json());
@@ -173,9 +178,24 @@
 			body: JSON.stringify(query)
 		});
 
-		console.log(login.status);
+		// console.log(login.status);
 		const loginData = await login.json();
-		console.log(loginData);
+		// console.log(loginData);
+
+		if (login.status === 200) {
+			const userData = loginData.data.user;
+			const exp = userData.experience;
+
+			idElem.textContent = `No. ${userData.id}`;
+			// levelElem.textContent = userData.level;
+			levelElem.textContent = Math.floor((-1 + Math.sqrt(1+8*exp))/2);
+			cashElem.textContent = userData.currency;
+		} else {
+			console.error("Login failed with status:", login.status);
+			idElem.textContent = "No. ----";
+			levelElem.textContent = "--";
+			cashElem.textContent = "--";
+		}
 	}
 
 	main();
