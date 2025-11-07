@@ -13,7 +13,7 @@
 		}
 
 		:root {
-			--text-opacity: 0.3;
+			--text-opacity: 0.5;
 		}
 
 		html, body {
@@ -58,7 +58,7 @@
 			font-size: calc(5*var(--dvw));
 			line-height: 1;
 			font-family: serif;
-			color: rgba(217, 165, 33, 0.3);
+			color: rgba(217, 165, 33, var(--text-opacity));
 			position: relative;
 
 			display: flex;
@@ -96,7 +96,7 @@
 						padding-top: 1em;
 						height: 2em;
 						box-sizing: border-box;
-						border-bottom: solid 1px rgba(217, 165, 33, 0.3);						
+						border-bottom: solid 1px rgba(217, 165, 33, var(--text-opacity));						
 
 						& > span {
 							position: absolute;
@@ -129,14 +129,14 @@
 			font-size: calc(5*var(--dvw));
 			line-height: 1;
 			font-family: serif;
-			color: rgba(217, 165, 33, 0.3);
+			color: rgba(217, 165, 33, var(--text-opacity));
 			position: relative;
 
 			opacity: 0;
 			display: flex;
 			flex-direction: column;
 			/* align-items: center; */
-			color: rgba(255, 250, 250,0.3);
+			color: rgba(255, 250, 250,var(--text-opacity));
 
 			& > .line {
 				width: 100%;
@@ -162,7 +162,7 @@
 				& > .desc {
 					/* height: 10%; */
 					font-size: 0.3em;
-					color: rgba(255, 250, 250,0.3);
+					color: rgba(255, 250, 250,var(--text-opacity));
 				}
 			}
 
@@ -178,7 +178,7 @@
 				& > .quest {
 					--progress: 0%;
 
-					color: rgba(255, 250, 250,0.3);
+					color: rgba(255, 250, 250,var(--text-opacity));
 					width: 50%;
 					/* height: 1em; */
 					display: flex;
