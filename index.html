@@ -1,42 +1,139 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>横向き固定ページ</title>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-  }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Member's Card</title>
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+			/* height: 100%; */
+			width: 100dvw;
+			height: 100dvh;
+			/* padding: 2.5dvh 2.5dvw; */
+			overflow: hidden;
+			background: #161616;
+			/* background-image: url("img/logo.webp");
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center; */
+			
+			&::before {
+				width: 100%;
+				height: 100%;
+				content: "";
+				position: absolute;
+				inset: 0;
+				background-image: url("img/logo.webp");
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				opacity: 0.01;
+			}
+		}
 
-  .container {
-    width: 100vw;
-    height: 100vh;
-    background: lightblue;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2em;
-    transition: transform 0.3s ease;
-  }
+		.front {
+			--dvh: 1dvh;
+			--dvw: 1dvw;
 
-  /* 縦向きのときは内容を90度回転 */
-  @media screen and (orientation: portrait) {
-    .container {
-      transform: translateY(-50vw) translateX(50vw) rotate(90deg);
-      transform-origin: 0 50%;
-      width: 100vh;
-      height: 100vw;
-    }
-  }
-</style>
+			width: 100dvw;
+			height: 100dvh;
+			padding: calc(2.5*var(--dvh)) calc(2.5*var(--dvw));
+			box-sizing: border-box;
+			font-size: 5dvw;
+			line-height: 1;
+			font-family: serif;
+			color: rgba(217, 165, 33, 0.3);
+			display: flex;
+			align-items: center;
+			position: relative;
+
+			& > .main {
+
+				& > .uinfo {
+					width: 100%;
+					margin-top: 1em;
+					font-size: 0.4em;
+					/* line-height: 1.5; */
+					/* text-decoration: underline; */
+
+					& > .id {
+						position: absolute;
+						left: calc(2.5*var(--dvw));
+						top: calc(2.5*var(--dvh));
+					}
+
+					& > .ui:not(.id) {
+						position: relative;
+						padding-top: 1em;
+						height: 2em;
+						box-sizing: border-box;
+						border-bottom: solid 1px rgba(217, 165, 33, 0.3);
+						/* color: #d9a521; */
+						
+
+						& > span {
+							position: absolute;
+							left: 8em;
+						}
+					}
+				}
+			}
+
+			& > #qrcode {
+				width: calc(20*var(--dvw));
+				aspect-ratio: 1;
+				position: absolute;
+				top: calc(2.5*var(--dvh));
+				right: calc(2.5*var(--dvw));
+				opacity: 0.3;
+
+				& > img {
+					width: 100%;
+					height: 100%;
+				}
+			}
+		}
+
+	/* 縦向きのときは内容を90度回転 */
+		@media screen and (orientation: portrait) {
+			.front {
+				--dvh: 1dvw;
+				--dvw: 1dvh;
+
+				transform: translateY(-50dvw) translateX(50dvw) rotate(90deg);
+				transform-origin: 0 50%;
+				width: 100dvh;
+				height: 100dvw;
+			}
+		}
+	</style>
+	<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    横向きで見てください
-  </div>
+	<div class="front">
+		<div class="main">
+			Member's Card
+			<div class="uinfo">
+				<div class="ui id">No. 123456</div>
+				<div class="ui name">Name<span>user0000</span></div>
+				<div class="ui level">Level<span>50</span></div>
+			</div>
+		</div>
+		<div id="qrcode" class="qrcode"></div>
+	</div>
 </body>
+<script>
+	const url = window.location.href;
+
+	const qr = new QRCode(document.getElementById("qrcode"), {
+		text: url,
+		// width: 256,
+		// height: 256,
+		colorDark: "#d9a521",  // 黒部分の色（例：Googleブルー）
+		colorLight: "#161616", // 白部分の色（例：グレー）
+		correctLevel: QRCode.CorrectLevel.H
+	});
+</script>
 </html>
