@@ -292,6 +292,8 @@
 	const frontElem = document.querySelector(".front");
 	const backElem = document.querySelector(".back");
 	document.body.addEventListener("click", () => {
+		main();
+
 		state = !state;
 		if (state) {
 			frontElem.style.opacity = "1";
