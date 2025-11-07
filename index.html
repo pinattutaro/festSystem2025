@@ -14,6 +14,7 @@
 			/* padding: 2.5dvh 2.5dvw; */
 			overflow: hidden;
 			background: #161616;
+			/* color: #c0c0c0; */
 			/* background-image: url("img/logo.webp");
 			background-size: contain;
 			background-repeat: no-repeat;
@@ -126,12 +127,13 @@
 </body>
 <script>
 	const url = window.location.href;
+	console.log("Generating QR code for URL:", url);
 
 	const qr = new QRCode(document.getElementById("qrcode"), {
 		text: url,
 		// width: 256,
 		// height: 256,
-		colorDark: "#d9a521",  // 黒部分の色（例：Googleブルー）
+		colorDark: "#c0c0c0",  // 黒部分の色（例：Googleブルー）
 		colorLight: "#161616", // 白部分の色（例：グレー）
 		correctLevel: QRCode.CorrectLevel.H
 	});
