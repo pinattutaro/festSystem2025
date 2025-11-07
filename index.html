@@ -1,50 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>welcome to our guild in 3I</title>
-    <link rel="stylesheet" href="default.css">
-    <link rel="stylesheet" href="fontPack.css">
-    <link rel="stylesheet" href="general.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>横向き固定ページ</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .container {
+    width: 100vw;
+    height: 100vh;
+    background: lightblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    transition: transform 0.3s ease;
+  }
+
+  /* 縦向きのときは内容を90度回転 */
+  @media screen and (orientation: portrait) {
+    .container {
+      transform: translateY(-50vw) translateX(50vw) rotate(90deg);
+      transform-origin: 0 50%;
+      width: 100vh;
+      height: 100vw;
+    }
+  }
+</style>
 </head>
 <body>
-    <div class="page">
-        <div class="header"><span>header</span></div>
-        <iframe src="./page/home/home.html" frameborder="0" class="main"></iframe>
-        <!-- <div class="footer">
-            <div class="icon selected">
-                <div class="img" style="background-image: url('./img/home.svg')"></div>
-            </div>
-            <div class="icon">
-                <div class="img" style="background-image: url('./img/list.svg')"></div>
-            </div>
-            <div class="icon">
-                <div class="img" style="background-image: url('./img/leaderboard.svg')"></div>
-            </div>
-            <div class="icon">
-                <div class="img" style="background-image: url('./img/person.svg')"></div>
-            </div>
-            <div class="pointer"></div>
-        </div> -->
-    </div>
+  <div class="container">
+    横向きで見てください
+  </div>
 </body>
-<script>
-    const icons = document.querySelectorAll('.icon');
-    const iframe = document.getElementsByClassName('main')[0];
-    const pages = ["home", "quest", "rank", "setting"];
-    const pointer = document.getElementsByClassName('pointer')[0];
-
-    for (let i = 0; i < icons.length; i++) {
-        ["click", "touchstart"].forEach(x => {
-            icons[i].addEventListener(x, () => {
-                // console.log(i);
-                iframe.setAttribute("src", `./page/${pages[i]}/${pages[i]}.html`);
-                icons.forEach(e => {e.className = "icon";});
-                icons[i].classList.add('selected');
-                pointer.style.left = `${i*25}dvw`;
-            });
-        });
-    }
-</script>
 </html>
