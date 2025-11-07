@@ -29,16 +29,6 @@
 			& > .front, .back {
 				grid-area: a;
 
-				width: 100dvw;
-				height: 100dvh;
-				padding: calc(2.5*var(--dvh)) calc(2.5*var(--dvw));
-				box-sizing: border-box;				
-				font-size: calc(5*var(--dvw));
-				line-height: 1;
-				font-family: serif;
-				color: rgba(217, 165, 33, 0.3);
-				position: relative;
-
 				& > .onePoint {
 					width: 1em;
 					position: absolute;
@@ -49,6 +39,16 @@
 		}
 
 		.front {
+			width: 100dvw;
+			height: 100dvh;
+			padding: calc(2.5*var(--dvh)) calc(2.5*var(--dvw));
+			box-sizing: border-box;				
+			font-size: calc(5*var(--dvw));
+			line-height: 1;
+			font-family: serif;
+			color: rgba(217, 165, 33, 0.3);
+			position: relative;
+
 			display: flex;
 			align-items: center;
 
@@ -110,6 +110,16 @@
 		}
 
 		.back {
+			width: 100dvw;
+			height: 100dvh;
+			padding: calc(2.5*var(--dvh)) calc(2.5*var(--dvw));
+			box-sizing: border-box;				
+			font-size: calc(5*var(--dvw));
+			line-height: 1;
+			font-family: serif;
+			color: rgba(217, 165, 33, 0.3);
+			position: relative;
+
 			opacity: 0;
 			display: flex;
 			flex-direction: column;
@@ -211,10 +221,6 @@
 		}
 
 		@media screen and (orientation: portrait) {
-			body::before {
-				/* transform: rotate(90deg); */
-			}
-
 			.front, .back {
 				--dvh: 1dvw;
 				--dvw: 1dvh;
