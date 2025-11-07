@@ -13,7 +13,7 @@
 		}
 
 		:root {
-			--text-opacity: 0.5;
+			--text-opacity: 0.3;
 		}
 
 		html, body {
@@ -38,6 +38,7 @@
 					position: absolute;
 					bottom: calc(2.5*var(--dvh));
 					right: calc(2.5*var(--dvw));
+					z-index: 1;
 				}
 			}
 		}
@@ -304,16 +305,26 @@
 	const frontElem = document.querySelector(".front");
 	const backElem = document.querySelector(".back");
 	document.body.addEventListener("click", () => {
-		main();
+		// main();
 
 		state = !state;
 		if (state) {
 			frontElem.style.opacity = "1";
-			backElem.style.opacity = "0";			
+			backElem.style.opacity = "0";
+			main();			
 		} else {
 			frontElem.style.opacity = "0";
 			backElem.style.opacity = "1";						
 		}
+	});
+
+	const logoElem = document.querySelector(".onePoint");
+	let opacityState = 0.3;
+	logoElem.addEventListener("click", (e) => {
+		console.log("Logo clicked");
+		e.stopPropagation();
+		opacityState += 0.2;
+		document.body.style.setProperty("--text-opacity", opacityState);
 	});
 
 	const idElem = document.querySelector(".uinfo .id");
