@@ -12,6 +12,10 @@
 			inherits: true;
 		}
 
+		:root {
+			--text-opacity: 0.3;
+		}
+
 		html, body {
 			margin: 0;
 			padding: 0;
@@ -269,7 +273,7 @@
 		<div class="quests">
 			<div class="quest" id="dungeon">
 				<div class="lg material-symbols-outlined">castle</div>
-				<div class="qst">aaaaaa</div>
+				<div class="qst">----------</div>
 			</div>
 			<div class="quest" id="casino">
 				<div class="lg material-symbols-outlined">poker_chip</div>
@@ -349,7 +353,8 @@
 			// idElem.textContent = "No. ----";
 			// levelElem.textContent = "--";
 			// cashElem.textContent = "--";	
-			return;		
+			sub();
+			return -1;		
 		}
 
 		const userData = loginData.data.user;
@@ -383,12 +388,17 @@
 		if (uinfo.status !== 200) {
 			console.error("Fetching user info failed with status:", uinfo.status);
 			alert("ユーザー情報の取得に失敗しました。\nページをリフレッシュしてください。");
-			return;		
+			sub();
+			return -1;		
 		}
 
 		const uinfoData = (await uinfo.json()).data.user;
 		console.log("Fetched user info:", uinfoData);
 
+		localStorage.setItem("fest2025_id", query.id);
+		localStorage.setItem("fest2025_id2", query.id2);
+
+		//quest update
 		const quests = uinfoData.activeQuests;
 		const flags = uinfoData.flags;
 
@@ -408,6 +418,18 @@
 			questElem.style.setProperty("--progress", progress);
 
 		})
+	}
+
+	const sub = async () => {
+		const id = localStorage.getItem("fest2025_id");
+		const id2 = localStorage.getItem("fest2025_id2");
+
+		if (!id || !id2) {
+			console.error("No stored credentials found.");
+			return;
+		}
+
+		window.location.replace(`index.html?id=${id}&id2=${id2}`);
 	}
 
 	main();
