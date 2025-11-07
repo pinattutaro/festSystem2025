@@ -151,5 +151,33 @@
 		colorLight: "#161616",
 		correctLevel: QRCode.CorrectLevel.H
 	});
+
+	const main = async () => {
+		const envjson = await fetch("https://pinattutaro.github.io/fest2025api/4u/env.json").then(res => res.json());
+		const uri = envjson.uri;
+
+		console.log("Fetched env.json:", envjson);
+
+		const params = new URLSearchParams(window.location.search);
+		const query = {};
+		for (const [key, value] of params.entries()) {
+			query[key] = value;
+		}
+		// console.log(query);
+
+		const login = await fetch(`${uri}/api/auth/login`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(query)
+		});
+
+		console.log(login.status);
+		const loginData = await login.json();
+		console.log(loginData);
+	}
+
+	main();
 </script>
 </html>
