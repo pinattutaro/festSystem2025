@@ -189,7 +189,7 @@
 			}
 
 			& > #barcode {
-				width: 30%;
+				width: 50%;
 				/* height: 10%; */
 				display: flex;
 				flex-direction: column;
@@ -310,7 +310,7 @@
 		<div class="line"></div>
 
 		<div id="barcode">
-			<svg class="bar" preserveAspectRatio="none"></svg>
+			<svg class="bar"></svg>
 			<span class="desc"></span>
 		</div>
 
@@ -366,14 +366,10 @@
 		qrLargeElem.style.display = "none";
 		state = !state;
 		if (state) {
-			// frontElem.style.opacity = "1";
-			// backElem.style.opacity = "0";
 			frontElem.style.display = "flex";
 			backElem.style.display = "none";
 			main();            
 		} else {
-			// frontElem.style.opacity = "0";
-			// backElem.style.opacity = "1";   
 			frontElem.style.display = "none";
 			backElem.style.display = "flex";                     
 		}
@@ -388,14 +384,8 @@
 	qrLargeElem.addEventListener('touchend', (e) => { e.preventDefault(); qrLargeElem.style.display = 'none'; qrState = true; });
 
 	const logoElem = document.querySelector(".onePoint");
-	// let opacityState = 0.5;
 	let clicked = 0;
 	logoElem.addEventListener("click", (e) => {
-		// console.log("Logo clicked");
-		// e.stopPropagation();
-		// opacityState += 0.2;
-		// document.body.style.setProperty("--text-opacity", opacityState);
-
 		e.stopPropagation();
 		clicked += 1;
 		clicked %= 5;
@@ -409,9 +399,13 @@
 
 	const barcodeElem = document.querySelector("#barcode");
 
+	let uri = "";
+	let apiKey = "";
+
 	const init = async () => {
 		const envjson = await fetch("https://pinattutaro.github.io/fest2025api/4u/env.json").then(res => res.json());
-		const uri = envjson.uri;
+		uri = envjson.uri;
+		apiKey = envjson["x-api-key"];
 
 		console.log("Fetched env.json:", envjson);
 
@@ -431,17 +425,99 @@
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(...query, { qr: true })
+			body: JSON.stringify({...query, qr: true })
 		});
 
-		if (login.status !== 200) {
+		if (login.status == 200) {
 			localStorage.setItem("id", query.id);
 			localStorage.setItem("id2", query.id2);
+
+			const url = new URL(window.location.href);
+			url.search = '';
+			window.history.replaceState({}, document.title, url.toString());
 			main();
 			return;
-		} else {
-			
 		}
+
+		alert("Login failed.");
+	}
+
+	const login = async (id, id2) => {
+		const res = await fetch(`${uri}/api/auth/login`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ id, id2, qr: false })
+		});
+
+		const data = await res.json();
+		console.log("Login response:", data);
+		return data;
+	}
+
+	const uinfo = async (token) => {
+		console.log("Fetching user info with token:", token);
+		const res = await fetch(`${uri}/api/users/me`, {
+			method: "POST",
+			headers: {
+				"Authorization": `Bearer ${token}`
+			}
+		});
+
+		const data = await res.json()
+		console.log("User info response:", data);
+		return data;
+	}
+
+	const main = async () => {
+		const id = localStorage.getItem("id");
+		const id2 = localStorage.getItem('id2');
+
+		if (!id || !id2) {
+			console.log("No ID found in localStorage.");
+			return;
+		}
+
+		const token = (await login(id, id2)).data.token;
+
+		const user = (await uinfo(token)).data.user;
+		const exp = user.experience;
+		const cash = user.currency;
+		const quests = user.activeQuests;
+		const flags = user.flags;
+
+		idElem.textContent = `No. ${id}`;
+		levelElem.textContent = `${Math.floor((-1 + Math.sqrt(1+8*exp))/2)}`;
+		cashElem.textContent = `${cash}`;
+
+		const qrcodes = document.querySelectorAll(".qrcode");
+		qrcodes.forEach(elem => {
+			elem.style.backgroundImage = `url("./img/qrcodes/${id}.png")`;
+		});
+
+		JsBarcode(barcodeElem.querySelector(".bar"), `https://go.com?id=${id}`, {
+			format: "CODE128",
+			lineColor: "#c0c0c0",
+			background: "#161616",
+			displayValue: false,
+			margin: 0
+		});
+
+		["dungeon", "casino", "code_editor"].forEach(q => {
+			const questElem = document.getElementById(q);
+			const questData = quests[q];
+
+			const {description, questId, startValue, targetValue} = questData;
+			// console.log(description);
+			const currentValue = flags[questId];
+			const progress = `${Math.floor(100 * (currentValue - startValue) / (targetValue - startValue))}%`;
+			console.log(`${q} progress:`, progress);
+
+			questElem.querySelector(".qst").textContent = description;
+			questElem.style.setProperty("--progress", progress);
+
+		});
 	}
 
 	init();
