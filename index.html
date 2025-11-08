@@ -56,10 +56,13 @@
 			display: none;
 			width: calc(90*var(--dvh));
 			aspect-ratio: 1;
-			grid-area: a;
+			/* grid-area: a; */
 			/* transform: translate(-50%, -50%); */
 			cursor: pointer;
 			z-index: 2;
+			position: absolute;
+			top: calc(5*var(--dvh));
+			right: calc(2.5*var(--dvw));
 
 			& > img {
 				width: 100%;
@@ -129,12 +132,24 @@
 				position: absolute;
 				top: calc(2.5*var(--dvh));
 				right: calc(2.5*var(--dvw));
-				opacity: 0.3;
+
+				/* align-self: flex-end;
+				justify-self: flex-end; */
+				opacity: var(--text-opacity);
 				z-index: 1;
 
 				& > img {
 					width: 100%;
 					height: 100%;
+				}
+
+				&:hover {
+					position: absolute;
+					width: calc(90*var(--dvh));
+					aspect-ratio: 1;
+					top: calc(5*var(--dvh));
+					left: calc(50*var(--dvw) - 45*var(--dvh));
+					opacity: 1;
 				}
 			}
 		}
@@ -146,12 +161,13 @@
 			box-sizing: border-box;				
 			font-size: calc(5*var(--dvw));
 			line-height: 1;
+			display: none;
 			font-family: serif;
 			color: rgba(217, 165, 33, var(--text-opacity));
 			position: relative;
 
-			opacity: 0;
-			display: flex;
+			opacity: 1;
+			/* display: flex; */
 			flex-direction: column;
 			/* align-items: center; */
 			color: rgba(255, 250, 250,var(--text-opacity));
@@ -161,6 +177,8 @@
 				aspect-ratio: 10;
 				background: black;
 				margin: 1em 0;
+				pointer-events: none;
+
 			}
 
 			& > #barcode {
@@ -330,33 +348,55 @@
 
 	let qrState = true;
 	const qrLargeElem = document.getElementById("qrLarge");
-	document.getElementById("qrcode").addEventListener("click", (e) => {
-		console.log("QR code clicked");
-		e.stopPropagation();
+	const qrcodeElem = document.getElementById("qrcode");
+	function openQrLarge(e){
+		console.log("QR code clicked / touched");
+		// prevent the body click handler from toggling the card
+		if(e && e.stopPropagation) e.stopPropagation();
 		qrState = false;
-		qrLargeElem.style.display = "block";
-	});
+		// qrLargeElem.style.display = "block";
+	}
+	// support click, pointer and touch for mobile
+	qrcodeElem.addEventListener("click", openQrLarge);
+	qrcodeElem.addEventListener("pointerup", openQrLarge);
+	qrcodeElem.addEventListener("touchend", (e) => { e.preventDefault(); openQrLarge(e); });
 
 	let state = true;
 	const frontElem = document.querySelector(".front");
 	const backElem = document.querySelector(".back");
-	document.body.addEventListener("click", () => {
-		qrLargeElem.style.display = "none";
+	document.body.addEventListener("click", (e) => {
+		// If the large QR is open (qrState === false), close it and consume the event
 		if (!qrState) {
+			qrLargeElem.style.display = "none";
 			qrState = true;
-			e.stopPropagation();
+			if (e && e.stopPropagation) e.stopPropagation();
 			return;
 		}
+
+		// otherwise toggle front/back view
+		qrLargeElem.style.display = "none";
 		state = !state;
 		if (state) {
-			frontElem.style.opacity = "1";
-			backElem.style.opacity = "0";
-			main();			
+			// frontElem.style.opacity = "1";
+			// backElem.style.opacity = "0";
+			frontElem.style.display = "flex";
+			backElem.style.display = "none";
+			main();            
 		} else {
-			frontElem.style.opacity = "0";
-			backElem.style.opacity = "1";						
+			// frontElem.style.opacity = "0";
+			// backElem.style.opacity = "1";   
+			frontElem.style.display = "none";
+			backElem.style.display = "flex";                     
 		}
 	});
+
+	// allow tapping the large QR to close it (mobile friendly)
+	qrLargeElem.addEventListener('click', (e) => {
+		qrLargeElem.style.display = 'none';
+		qrState = true;
+		if (e && e.stopPropagation) e.stopPropagation();
+	});
+	qrLargeElem.addEventListener('touchend', (e) => { e.preventDefault(); qrLargeElem.style.display = 'none'; qrState = true; });
 
 	const logoElem = document.querySelector(".onePoint");
 	// let opacityState = 0.5;
