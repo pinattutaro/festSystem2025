@@ -1,5 +1,4 @@
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="ja">
     <head>
       <meta charset="UTF-8">
@@ -25,12 +24,15 @@
         // const users = [{"id":"xoU5Av","src":"./qrcodes/xoU5Av.png"},{"id":"LTJpYL","src":"./qrcodes/LTJpYL.png"},{"id":"WNpGYu","src":"./qrcodes/WNpGYu.png"},{"id":"AdjcEP","src":"./qrcodes/AdjcEP.png"},{"id":"ODpbzt","src":"./qrcodes/ODpbzt.png"},{"id":"e3tC5t","src":"./qrcodes/e3tC5t.png"},{"id":"7eCqUD","src":"./qrcodes/7eCqUD.png"},{"id":"lPlWBe","src":"./qrcodes/lPlWBe.png"},{"id":"hmp5A7","src":"./qrcodes/hmp5A7.png"},{"id":"LU7XC9","src":"./qrcodes/LU7XC9.png"}];
         let currentIndex = 0;
         let users = [];
+        let uri = "";
 
         const qrImage = document.getElementById('qr-image');
         const qrInfo = document.getElementById('qr-info');
 
         function showQr(index) {
-          if (index < 0 || index >= users.length) return;
+          if (users.length === 0) return;
+          if (index < 0) index = 0;
+          if (index >= users.length) index = users.length - 1;
           currentIndex = index;
           const user = users[index];
           qrImage.src = `./img/qrcodes/${user.id}.png`;
@@ -45,16 +47,74 @@
           }
         });
 
+        // WebSocket 関連
+        let ws = null;
+
+        function normalizeWsUri(u) {
+          if (!u) return u;
+          if (u.startsWith('ws://') || u.startsWith('wss://')) return u;
+          // http/https -> ws/wss
+          return u.replace(/^http/, 'ws');
+        }
+
+        function connectWebSocket() {
+          if (!uri) return;
+          const wsUri = normalizeWsUri(uri);
+          try {
+            ws = new WebSocket(wsUri);
+          } catch (err) {
+            console.error('WebSocket connect error', err);
+            return;
+          }
+
+          ws.addEventListener('open', () => {
+            console.log('WebSocket connected', wsUri);
+            // // 初期状態を送る（任意）
+            // sendClientAction({ type: 'hello', timestamp: Date.now() });
+          });
+
+          ws.addEventListener('message', (ev) => {
+            try {
+              const msg = JSON.parse(ev.data);
+              console.log('WebSocket message received', msg);
+            } catch (err) {
+              console.warn('invalid ws message', ev.data);
+            }
+          });
+
+          ws.addEventListener('close', (ev) => {
+            console.warn('WebSocket closed', ev.code, ev.reason);
+            ws = null;
+          });
+
+          ws.addEventListener('error', (ev) => {
+            console.error('WebSocket error', ev);
+            // error の後に close が来ることが多いのでここでは再接続せず待つ
+          });
+        }
+
         const main = async () => {
-          // ユーザーデータをサーバーから取得
-          const response = await fetch('./credentials.json');
-          users = await response.json();
-          console.log(users);
-          showQr(0);
+          try {
+            const res = await fetch('https://pinattutaro.github.io/fest2025api/4u/env.json');
+            const env = await res.json();
+            uri = env.uri;
+          } catch (err) {
+            console.warn('failed to load env.json', err);
+            uri = ''; // 必要ならローカルで ws://localhost:...
+          }
+
+          // 初回ユーザーデータ取得
+          await fetchUsers();
+
+          // WebSocket 接続開始
+          if (uri) connectWebSocket();
         };
+
+        window.addEventListener('beforeunload', () => {
+          if (ws) try { ws.close(); } catch (e) {}
+        });
 
         main();
       </script>
     </body>
     </html>
-  
