@@ -433,17 +433,19 @@
 			localStorage.setItem("id2", query.id2);
 
 			main();
+			const url = new URL(window.location.href);
+			url.search = '';
+			window.history.replaceState({}, document.title, url.toString());
+			return;
 		} else if (localStorage.getItem("id") && localStorage.getItem("id2")) {
 			main();
+			const url = new URL(window.location.href);
+			url.search = '';
+			window.history.replaceState({}, document.title, url.toString());
+			return;
 		}
 
-		const url = new URL(window.location.href);
-		url.search = '';
-		window.history.replaceState({}, document.title, url.toString());
-
 		alert("Login failed.");
-
-		return;
 	}
 
 	const login = async (id, id2) => {
