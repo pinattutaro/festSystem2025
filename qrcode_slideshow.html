@@ -98,6 +98,10 @@
             const res = await fetch('https://pinattutaro.github.io/fest2025api/4u/env.json');
             const env = await res.json();
             uri = env.uri;
+
+            const response = await fetch('./credentials.json');
+            users = await response.json();
+            console.log('Loaded users:', users);
           } catch (err) {
             console.warn('failed to load env.json', err);
             uri = ''; // 必要ならローカルで ws://localhost:...
