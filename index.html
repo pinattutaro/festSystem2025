@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=390, initial-scale=0.5">
 	<title>Member's Card</title>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 	<style>
@@ -124,6 +124,12 @@
 						}
 					}
 				}
+			}
+
+			.qrcode {
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
 			}
 
 			& > #qrcode {
@@ -284,7 +290,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 </head>
 <body>
-	<div id="qrLarge"></div>
+	<div id="qrLarge" class="qrcode"></div>
 	<div class="front">
 		<!-- <img src="./img/logo.webp" alt="logo" class="onePoint"> -->
 		<div class="main">
@@ -328,23 +334,23 @@
 	const url = window.location.href;
 	console.log("Generating QR code for URL:", url);
 
-	const qr = new QRCode(document.getElementById("qrcode"), {
-		text: url,
-		// width: 256,
-		// height: 256,
-		colorDark: "#c0c0c0",
-		colorLight: "#161616",
-		correctLevel: QRCode.CorrectLevel.H
-	});
+	// const qr = new QRCode(document.getElementById("qrcode"), {
+	// 	text: url,
+	// 	// width: 256,
+	// 	// height: 256,
+	// 	colorDark: "#c0c0c0",
+	// 	colorLight: "#161616",
+	// 	correctLevel: QRCode.CorrectLevel.H
+	// });
 
-	const qrLarge = new QRCode(document.getElementById("qrLarge"), {
-		text: url,
-		// width: 512,
-		// height: 512,
-		colorDark: "#c0c0c0",
-		colorLight: "#161616",
-		correctLevel: QRCode.CorrectLevel.H
-	});
+	// const qrLarge = new QRCode(document.getElementById("qrLarge"), {
+	// 	text: url,
+	// 	// width: 512,
+	// 	// height: 512,
+	// 	colorDark: "#c0c0c0",
+	// 	colorLight: "#161616",
+	// 	correctLevel: QRCode.CorrectLevel.H
+	// });
 
 	let qrState = true;
 	const qrLargeElem = document.getElementById("qrLarge");
@@ -462,6 +468,11 @@
 		idElem.textContent = `No. ${userData.id}`;
 		levelElem.textContent = `${Math.floor((-1 + Math.sqrt(1+8*exp))/2)}`
 		cashElem.textContent = userData.currency;
+
+		const qrcodes = document.querySelectorAll(".qrcode");
+		qrcodes.forEach(elem => {
+			elem.style.backgroundImage = `url("./img/qrcodes/${userData.id}.png")`;
+		});
 
 		// generate barcode
 		JsBarcode(barcodeElem.querySelector(".bar"), String(userData.id), {
