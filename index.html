@@ -442,6 +442,9 @@
 		const id = localStorage.getItem("fest2025_id");
 		const id2 = localStorage.getItem("fest2025_id2");
 
+		localStorage.removeItem("fest2025_id");
+		localStorage.removeItem("fest2025_id2");
+
 		if (!id || !id2) {
 			console.error("No stored credentials found.");
 			return;
