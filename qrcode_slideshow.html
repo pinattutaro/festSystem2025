@@ -103,9 +103,6 @@
             uri = ''; // 必要ならローカルで ws://localhost:...
           }
 
-          // 初回ユーザーデータ取得
-          await fetchUsers();
-
           // WebSocket 接続開始
           if (uri) connectWebSocket();
         };
