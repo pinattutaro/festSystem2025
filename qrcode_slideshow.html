@@ -33,7 +33,7 @@
           if (index < 0 || index >= users.length) return;
           currentIndex = index;
           const user = users[index];
-          qrImage.src = user.src;
+          qrImage.src = `./img/qrcodes/${user.id}.png`;
           qrInfo.textContent = `No. ${index + 1} / ${users.length}`;
         }
 
