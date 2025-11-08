@@ -432,17 +432,18 @@
 			localStorage.setItem("id", query.id);
 			localStorage.setItem("id2", query.id2);
 
-			const url = new URL(window.location.href);
-			url.search = '';
-			window.history.replaceState({}, document.title, url.toString());
 			main();
-			return;
 		} else if (localStorage.getItem("id") && localStorage.getItem("id2")) {
 			main();
-			return;
 		}
 
+		const url = new URL(window.location.href);
+		url.search = '';
+		window.history.replaceState({}, document.title, url.toString());
+
 		alert("Login failed.");
+
+		return;
 	}
 
 	const login = async (id, id2) => {
