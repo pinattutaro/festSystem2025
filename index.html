@@ -437,6 +437,9 @@
 			window.history.replaceState({}, document.title, url.toString());
 			main();
 			return;
+		} else if (localStorage.getItem("id") && localStorage.getItem("id2")) {
+			main();
+			return;
 		}
 
 		alert("Login failed.");
