@@ -428,6 +428,9 @@
 			body: JSON.stringify({...query, qr: true })
 		});
 
+		const localId = localStorage.getItem("id");
+		const localId2 = localStorage.getItem("id2");
+
 		if (login.status == 200) {
 			localStorage.setItem("id", query.id);
 			localStorage.setItem("id2", query.id2);
@@ -437,7 +440,7 @@
 			url.search = '';
 			window.history.replaceState({}, document.title, url.toString());
 			return;
-		} else if (localStorage.getItem("id") && localStorage.getItem("id2")) {
+		} else if (localId && localId2) {
 			console.log("Using stored credentials for login.");
 			main();
 			const url = new URL(window.location.href);
