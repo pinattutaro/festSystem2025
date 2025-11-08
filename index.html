@@ -130,6 +130,7 @@
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
+				opacity: var(--text-opacity);
 			}
 
 			& > #qrcode {
@@ -334,24 +335,6 @@
 	const url = window.location.href;
 	console.log("Generating QR code for URL:", url);
 
-	// const qr = new QRCode(document.getElementById("qrcode"), {
-	// 	text: url,
-	// 	// width: 256,
-	// 	// height: 256,
-	// 	colorDark: "#c0c0c0",
-	// 	colorLight: "#161616",
-	// 	correctLevel: QRCode.CorrectLevel.H
-	// });
-
-	// const qrLarge = new QRCode(document.getElementById("qrLarge"), {
-	// 	text: url,
-	// 	// width: 512,
-	// 	// height: 512,
-	// 	colorDark: "#c0c0c0",
-	// 	colorLight: "#161616",
-	// 	correctLevel: QRCode.CorrectLevel.H
-	// });
-
 	let qrState = true;
 	const qrLargeElem = document.getElementById("qrLarge");
 	const qrcodeElem = document.getElementById("qrcode");
@@ -426,7 +409,7 @@
 
 	const barcodeElem = document.querySelector("#barcode");
 
-	const main = async () => {
+	const init = async () => {
 		const envjson = await fetch("https://pinattutaro.github.io/fest2025api/4u/env.json").then(res => res.json());
 		const uri = envjson.uri;
 
@@ -437,113 +420,30 @@
 		for (const [key, value] of params.entries()) {
 			query[key] = value;
 		}
-		// console.log(query);
 
-		// login
+		if (!query.id) {
+			main();
+			return;
+		}
+
 		const login = await fetch(`${uri}/api/auth/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(query)
+			body: JSON.stringify(...query, { qr: true })
 		});
-
-		// console.log(login.status);
-		const loginData = await login.json();
-		// console.log(loginData);
 
 		if (login.status !== 200) {
-			console.error("Login failed with status:", login.status);
-			// idElem.textContent = "No. ----";
-			// levelElem.textContent = "--";
-			// cashElem.textContent = "--";	
-			sub();
-			return -1;		
-		}
-
-		const userData = loginData.data.user;
-		const exp = userData.experience;
-		const token = loginData.data.token;
-
-		idElem.textContent = `No. ${userData.id}`;
-		levelElem.textContent = `${Math.floor((-1 + Math.sqrt(1+8*exp))/2)}`
-		cashElem.textContent = userData.currency;
-
-		const qrcodes = document.querySelectorAll(".qrcode");
-		qrcodes.forEach(elem => {
-			elem.style.backgroundImage = `url("./img/qrcodes/${userData.id}.png")`;
-		});
-
-		// generate barcode
-		JsBarcode(barcodeElem.querySelector(".bar"), String(userData.id), {
-			format: "CODE128",
-			lineColor: "#c0c0c0",
-			background: "#161616",
-			// width: 2,
-			// height: 50,
-			displayValue: false,
-			margin: 0
-		});
-		barcodeElem.querySelector(".desc").textContent = `${userData.id}`;
-
-		// init user
-		const uinfo = await fetch(`${uri}/api/users/me`, {
-			method: "POST",
-			headers: {
-				'Authorization': `Bearer ${token}`
-			}
-		});
-
-		if (uinfo.status !== 200) {
-			console.error("Fetching user info failed with status:", uinfo.status);
-			alert("ユーザー情報の取得に失敗しました。\nページをリフレッシュしてください。");
-			sub();
-			return -1;		
-		}
-
-		const uinfoData = (await uinfo.json()).data.user;
-		console.log("Fetched user info:", uinfoData);
-
-		localStorage.setItem("fest2025_id", query.id);
-		localStorage.setItem("fest2025_id2", query.id2);
-
-		//quest update
-		const quests = uinfoData.activeQuests;
-		const flags = uinfoData.flags;
-
-		// console.log("Active quests:", quests);
-
-		["dungeon", "casino", "code_editor"].forEach(q => {
-			const questElem = document.getElementById(q);
-			const questData = quests[q];
-
-			const {description, questId, startValue, targetValue} = questData;
-			// console.log(description);
-			const currentValue = flags[questId];
-			const progress = `${Math.floor(100 * (currentValue - startValue) / (targetValue - startValue))}%`;
-			console.log(`${q} progress:`, progress);
-
-			questElem.querySelector(".qst").textContent = description;
-			questElem.style.setProperty("--progress", progress);
-
-		})
-	}
-
-	const sub = async () => {
-		const id = localStorage.getItem("fest2025_id");
-		const id2 = localStorage.getItem("fest2025_id2");
-
-		localStorage.removeItem("fest2025_id");
-		localStorage.removeItem("fest2025_id2");
-
-		if (!id || !id2) {
-			console.error("No stored credentials found.");
+			localStorage.setItem("id", query.id);
+			localStorage.setItem("id2", query.id2);
+			main();
 			return;
+		} else {
+			
 		}
-
-		window.location.replace(`index.html?id=${id}&id2=${id2}`);
 	}
 
-	main();
+	init();
 </script>
 </html>
