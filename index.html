@@ -438,6 +438,7 @@
 			window.history.replaceState({}, document.title, url.toString());
 			return;
 		} else if (localStorage.getItem("id") && localStorage.getItem("id2")) {
+			console.log("Using stored credentials for login.");
 			main();
 			const url = new URL(window.location.href);
 			url.search = '';
