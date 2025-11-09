@@ -54,14 +54,14 @@
         });
 
         page.addEventListener('input', (e) => {
-          const val = parseInt(page.textContent);
+          let val = parseInt(page.textContent);
           if (!isNaN(val)) {
             if (users.length === 0) return;
-            if (index < 0) index = 0;
-            if (index >= users.length) index = users.length - 1;
-              currentIndex = index;
-              const user = users[index];
-              qrImage.src = `./img/qrcodes/${user.id}.png`;
+            if (val < 0) val = 0;
+            if (val >= users.length) val = users.length - 1;
+            currentIndex = val;
+            const user = users[val];
+            qrImage.src = `./img/qrcodes/${user.id}.png`;
           }
         });
 
