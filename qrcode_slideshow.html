@@ -14,7 +14,7 @@
     <body>
       <div class="slide-container">
         <img id="qr-image" src="" alt="QR Code">
-        <p id="qr-info"></p>
+        <p id="qr-info"><input type="number" id="page"><span id="allPage"></span></p>
       </div>
       <div class="instructions">
         <p>← → キーでQRコードを切り替え (F11キーで全画面表示推奨)</p>
@@ -28,6 +28,8 @@
 
         const qrImage = document.getElementById('qr-image');
         const qrInfo = document.getElementById('qr-info');
+        const page = document.getElementById('page');
+        const allPage = document.getElementById('allPage');
 
         function showQr(index) {
           if (users.length === 0) return;
@@ -36,7 +38,10 @@
           currentIndex = index;
           const user = users[index];
           qrImage.src = `./img/qrcodes/${user.id}.png`;
-          qrInfo.textContent = `No. ${index + 1} / ${users.length}`;
+          // qrInfo.textContent = `No. ${index + 1} / ${users.length}`;
+          page.value = index + 1;
+          allPage.textContent = ` / ${users.length}`;
+
         }
 
         document.addEventListener('keydown', (e) => {
@@ -49,6 +54,13 @@
 
         // WebSocket 関連
         let ws = null;
+        let heartbeatIntervalId = null;
+        let heartbeatTimeoutId = null;
+        let reconnectTimer = null;
+        let reconnectDelay = 1000;
+        const MAX_RECONNECT_DELAY = 30000;
+        const HEARTBEAT_INTERVAL = 20000; // 20s
+        const HEARTBEAT_TIMEOUT = 10000;  // 10s
 
         function normalizeWsUri(u) {
           if (!u) return u;
@@ -57,25 +69,73 @@
           return u.replace(/^http/, 'ws');
         }
 
+        function clearHeartbeat() {
+          if (heartbeatIntervalId) { clearInterval(heartbeatIntervalId); heartbeatIntervalId = null; }
+          if (heartbeatTimeoutId) { clearTimeout(heartbeatTimeoutId); heartbeatTimeoutId = null; }
+        }
+
+        function startHeartbeat() {
+          clearHeartbeat();
+          // 定期的に ping を送る（アプリケーションレベル）
+          heartbeatIntervalId = setInterval(() => {
+            try {
+              if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'ping', ts: Date.now() }));
+                // pong が来なければタイムアウトとみなして切断 -> 再接続処理へ
+                if (heartbeatTimeoutId) clearTimeout(heartbeatTimeoutId);
+                heartbeatTimeoutId = setTimeout(() => {
+                  console.warn('heartbeat timeout, closing ws');
+                  try { ws.close(); } catch (e) {}
+                }, HEARTBEAT_TIMEOUT);
+              }
+            } catch (e) {
+              console.error('heartbeat send error', e);
+            }
+          }, HEARTBEAT_INTERVAL);
+        }
+
+        function scheduleReconnect() {
+          if (reconnectTimer) return;
+          reconnectTimer = setTimeout(() => {
+            reconnectTimer = null;
+            console.log('attempt reconnect (delay %dms)', reconnectDelay);
+            connectWebSocket();
+            reconnectDelay = Math.min(MAX_RECONNECT_DELAY, reconnectDelay * 2);
+          }, reconnectDelay);
+        }
+
         function connectWebSocket() {
           if (!uri) return;
           const wsUri = normalizeWsUri(uri);
+          // 既に接続中/接続試行中なら何もしない
+          if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return;
           try {
             ws = new WebSocket(wsUri);
           } catch (err) {
             console.error('WebSocket connect error', err);
+            scheduleReconnect();
             return;
           }
 
           ws.addEventListener('open', () => {
             console.log('WebSocket connected', wsUri);
-            // // 初期状態を送る（任意）
-            // sendClientAction({ type: 'hello', timestamp: Date.now() });
+            // 接続成功したら再接続遅延をリセットしてハートビート開始
+            reconnectDelay = 1000;
+            startHeartbeat();
+            // 必要ならクライアント状態を送信
+            // ws.send(JSON.stringify({ type: 'hello', ts: Date.now() }));
           });
 
           ws.addEventListener('message', (ev) => {
             try {
               const msg = JSON.parse(ev.data);
+              // アプリケーションレベルの pong に対処
+              if (msg && msg.type === 'pong') {
+                if (heartbeatTimeoutId) { clearTimeout(heartbeatTimeoutId); heartbeatTimeoutId = null; }
+                return;
+              }
+              // 任意のメッセージ受信で heartbeat タイムアウトをクリア
+              if (heartbeatTimeoutId) { clearTimeout(heartbeatTimeoutId); heartbeatTimeoutId = null; }
               console.log('WebSocket message received', msg);
               showQr(currentIndex + 1);
             } catch (err) {
@@ -85,12 +145,14 @@
 
           ws.addEventListener('close', (ev) => {
             console.warn('WebSocket closed', ev.code, ev.reason);
+            clearHeartbeat();
             ws = null;
+            scheduleReconnect();
           });
 
           ws.addEventListener('error', (ev) => {
             console.error('WebSocket error', ev);
-            // error の後に close が来ることが多いのでここでは再接続せず待つ
+            // 多くの場合 error の後に close が来るため、ここでは再接続を待つ
           });
         }
 
@@ -99,7 +161,7 @@
             const res = await fetch('https://pinattutaro.github.io/fest2025api/4u/env.json');
             const env = await res.json();
             uri = env.uri;
-
+ 
             const response = await fetch('./credentials.json');
             users = await response.json();
             console.log('Loaded users:', users);
@@ -107,16 +169,18 @@
             console.warn('failed to load env.json', err);
             uri = ''; // 必要ならローカルで ws://localhost:...
           }
-
+ 
           // WebSocket 接続開始
           if (uri) connectWebSocket();
           showQr(0);
         };
-
+ 
         window.addEventListener('beforeunload', () => {
           if (ws) try { ws.close(); } catch (e) {}
+          clearHeartbeat();
+          if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
         });
-
+ 
         main();
       </script>
     </body>
