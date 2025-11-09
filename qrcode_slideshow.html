@@ -14,7 +14,7 @@
     <body>
       <div class="slide-container">
         <img id="qr-image" src="" alt="QR Code">
-        <p id="qr-info"><input type="number" id="page"><span id="allPage"></span></p>
+        <p id="qr-info"><span id="page" contenteditable="true"></span><span id="allPage"></span></p>
       </div>
       <div class="instructions">
         <p>← → キーでQRコードを切り替え (F11キーで全画面表示推奨)</p>
@@ -39,7 +39,7 @@
           const user = users[index];
           qrImage.src = `./img/qrcodes/${user.id}.png`;
           // qrInfo.textContent = `No. ${index + 1} / ${users.length}`;
-          page.value = index + 1;
+          page.textContent = index + 1;
           allPage.textContent = ` / ${users.length}`;
 
         }
